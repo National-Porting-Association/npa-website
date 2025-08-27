@@ -163,7 +163,6 @@ export default function GamesPage() {
                         ))}
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        Ported: {new Date(game.portDate).toLocaleDateString()}
                       </p>
                     </div>
 
