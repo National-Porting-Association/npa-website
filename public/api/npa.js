@@ -25,8 +25,8 @@
     }
   }
 
-  async function fetchWithFallback(url = '/data/games.json') {
-    const key = url || '/data/games.json';
+  async function fetchWithFallback(url = '/api/games.json') {
+    const key = url || '/api/games.json';
     if (_cache[key]) return _cache[key];
     // try builder apiClient first
     try {
@@ -238,14 +238,14 @@
       if (!res.ok) throw new Error('Failed to fetch config');
       return await res.json();
     } catch (e) {
-      return { apiBase: 'http://localhost:3000', endpoints: { games: '/data/games.json' } };
+      return { apiBase: 'http://localhost:3000', endpoints: { games: '/api/games.json' } };
     }
   }
 
   async function fetchGames() {
     const cfg = await fetchConfig();
     const base = cfg.apiBase || 'http://localhost:3000';
-    const path = (cfg.endpoints && cfg.endpoints.games) || '/data/games.json';
+    const path = (cfg.endpoints && cfg.endpoints.games) || '/api/games.json';
     const url = base.replace(/\/$/, '') + path;
     try {
       const res = await fetch(url, { cache: 'no-store' });
@@ -566,7 +566,7 @@ button, a, [role="button"] { cursor: pointer !important; }
 
         const previewGames = makeBtn('Preview games ', async () => {
             try {
-                const net = await Builder.fetchGames('/data/games.json');
+                const net = await Builder.fetchGames('/api/games.json');
                 showModal(net || 'No games returned from network');
                 return;
             } catch (e) {
@@ -696,7 +696,7 @@ button, a, [role="button"] { cursor: pointer !important; }
     const playInPanelBtn = makeBtn('Play in panel', async () => {
             try {
                 let data = null;
-                try { data = await Builder.fetchGames('/data/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
+                try { data = await Builder.fetchGames('/api/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
                 let first = null;
                 if (Array.isArray(data)) first = data[0];
                 else if (data && data.games) first = data.games[0];
@@ -779,7 +779,7 @@ button, a, [role="button"] { cursor: pointer !important; }
                 if (!arg) {
                     // no arg: behave like Play in panel button (first game)
                     let data = null;
-                    try { data = await Builder.fetchGames('/data/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
+                    try { data = await Builder.fetchGames('/api/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
                     let first = null;
                     if (Array.isArray(data)) first = data[0];
                     else if (data && data.games) first = data.games[0];
@@ -793,7 +793,7 @@ button, a, [role="button"] { cursor: pointer !important; }
                     } else {
                         // treat as id or slug: find in games
                         let data = null;
-                        try { data = await Builder.fetchGames('/data/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
+                        try { data = await Builder.fetchGames('/api/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
                         let found = null;
                         if (Array.isArray(data)) found = data.find(g => String(g.id) === arg || String(g.slug) === arg || String(g.name) === arg || String(g.title) === arg);
                         else if (data && data.games) found = data.games.find(g => String(g.id) === arg || String(g.slug) === arg || String(g.name) === arg || String(g.title) === arg);
@@ -884,7 +884,7 @@ button, a, [role="button"] { cursor: pointer !important; }
             try {
                 // open first game using Play.open by id or url
                 let data = null;
-                try { data = await Builder.fetchGames('/data/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
+                try { data = await Builder.fetchGames('/api/games.json'); } catch (e) { data = safeParseEmbedded('data/games.json') || safeParseEmbedded('data/games.sample.json'); }
                 let first = null;
                 if (Array.isArray(data)) first = data[0];
                 else if (data && data.games) first = data.games[0];
@@ -906,7 +906,7 @@ button, a, [role="button"] { cursor: pointer !important; }
 
         const copyGames = makeBtn('Copy games JSON ', async () => {
             try {
-                const net = await Builder.fetchGames('/data/games.json');
+                const net = await Builder.fetchGames('/api/games.json');
                 const txt = JSON.stringify(net, null, 2);
                 if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(txt);
                 else {
@@ -952,7 +952,7 @@ button, a, [role="button"] { cursor: pointer !important; }
 
         const downloadGames = makeBtn('Download games JSON ', async () => {
             try {
-                const net = await Builder.fetchGames('/data/games.json');
+                const net = await Builder.fetchGames('/api/games.json');
                 const blob = new Blob([JSON.stringify(net, null, 2)], {
                     type: 'application/json'
                 });
@@ -997,7 +997,7 @@ button, a, [role="button"] { cursor: pointer !important; }
 
         const fetchTest = makeBtn('Fetch games ', async () => {
             try {
-                const res = await Builder.fetchGames('/data/games.json');
+                const res = await Builder.fetchGames('/api/games.json');
                 showModal({
                     ok: true,
                     count: Array.isArray(res) ? res.length : 'unknown'
