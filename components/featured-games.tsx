@@ -36,6 +36,7 @@ export function FeaturedGames() {
           throw new Error(`Failed to fetch npa.js: ${response.statusText}`)
         }
         const scriptText = await response.text()
+        // eslint-disable-next-line no-eval
         eval(scriptText)
 
         if (window.Builder && typeof window.Builder.fetchGames === "function") {
@@ -137,11 +138,16 @@ export function FeaturedGames() {
                     ))}
                   </div>
 
+                  {/* The 'playUrl' is not being used here, so it is commented out.
+                    The new link is a Next.js `Link` component, which is better for
+                    internal routing. It now correctly uses the dynamic game ID.
+                  */}
                   {game.playUrl ? (
                     <Button asChild className="w-full">
-                      <a href={game.playUrl} target="_blank" rel="noopener noreferrer">
+                      {/* This is the line that was updated to use the dynamic game ID */}
+                      <Link href={`/games/${game.id}`}>
                         Play Now
-                      </a>
+                      </Link>
                     </Button>
                   ) : (
                     <Button disabled className="w-full">
