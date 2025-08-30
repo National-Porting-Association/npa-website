@@ -8,7 +8,12 @@ export default function GamePage() {
 
 	useEffect(() => {
 		try {
-			try { (window as any).__builderFlags = Object.assign({}, (window as any).__builderFlags || {}, { hideDevButton: true }); } catch (e) {}
+			try {
+  				(window as any).__builderFlags = (window as any).__builderFlags || {};
+				(window as any).__builderFlags.hideDevButton = true;
+  				(window as any).__builderFlags.redirect = '/games';
+			} 
+			catch (e) {}
 			if (!document.querySelector('script[data-npa]')) {
 				const s = document.createElement('script')
 				s.setAttribute('data-npa', '1')
@@ -68,7 +73,6 @@ export default function GamePage() {
 	return (
 		<main className="min-h-screen p-8">
 			<h1 className="text-2xl font-bold mb-4">Game preview</h1>
-			<p className="text-sm text-muted-foreground mb-4">This page will load the dev bundle at <code>/api/npa.js</code> and open the mini/full player for the game identified by the URL slug or the <code>?gameid=</code> query parameter.</p>
 			<div className="space-y-3">
 				<div>Script loaded: {String(scriptLoaded)}</div>
 				<div>Player opened: {String(opened)}</div>

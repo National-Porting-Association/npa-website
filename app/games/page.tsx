@@ -24,6 +24,17 @@ interface Game {
 }
 
 export default function GamesPage() {
+useEffect(() => {
+    if (window.location.pathname === "/games" && !sessionStorage.getItem("gamesPageReloaded")) {
+      sessionStorage.setItem("gamesPageReloaded", "true");
+      window.location.reload();
+    }
+    return () => {
+      if (window.location.pathname !== "/games") {
+        sessionStorage.removeItem("gamesPageReloaded");
+      }
+    };
+  }, []);
   const [games, setGames] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
 
