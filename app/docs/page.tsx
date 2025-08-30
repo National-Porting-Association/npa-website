@@ -196,12 +196,18 @@ export default function DocsPage() {
                         <td className="py-2">Base URL used to prefix play and API routes when opening games or constructing links.</td>
                         <td className="py-2 text-muted-foreground">string</td>
                       </tr>
+                      <tr className="border-b">
+                        <td className="py-2 font-medium">redirect</td>
+                        <td className="py-2">(none)</td>
+                        <td className="py-2">If set, the page will redirect to this path after bundle initialization. Example: <code>window.__builderFlags.redirect = '/games'</code></td>
+                        <td className="py-2 text-muted-foreground">string</td>
+                      </tr>
                     </tbody>
                   </table>
 
                   {/* chart + table for all flags */}
                   {Object.keys(runtimeFlags || {}).length === 0 ? (
-                    <p className="text-muted-foreground">No runtime flags detected.</p>
+                    <p className="text-muted-foreground"></p>
                   ) : (
                     <div className="space-y-4">
                       {/* compute scaling values */}
@@ -230,12 +236,23 @@ export default function DocsPage() {
                                     pct = 0
                                   }
 
+                                  // Use neutral color for non-boolean bars
+                                  let barColor = '';
+                                  if (typeof v === 'boolean') {
+                                    barColor = v ? 'bg-green-500' : 'bg-red-500';
+                                  } else if (typeof v === 'number') {
+                                    barColor = 'bg-blue-400';
+                                  } else if (typeof v === 'string') {
+                                    barColor = 'bg-gray-400';
+                                  } else {
+                                    barColor = 'bg-border';
+                                  }
                                   return (
                                     <div key={k} className="flex items-center gap-3">
                                       <div className="w-40 text-sm font-medium truncate">{k}</div>
                                       <div className="flex-1">
                                         <div className="w-full bg-border rounded h-4 overflow-hidden">
-                                          <div style={{ width: `${pct}%` }} className={`h-4 ${typeof v === 'boolean' ? (v ? 'bg-green-500' : 'bg-red-500') : 'bg-primary'} rounded`} />
+                                          <div style={{ width: `${pct}%` }} className={`h-4 ${barColor} rounded`} />
                                         </div>
                                       </div>
                                       <div className="w-32 text-right text-xs text-muted-foreground">
@@ -266,6 +283,17 @@ export default function DocsPage() {
                                     else if (typeof v === 'boolean') pct = v ? 100 : 0
                                     else if (typeof v === 'string') pct = maxStr > 0 ? Math.round((String(v).length / maxStr) * 100) : 50
 
+                                    // Use neutral color for non-boolean bars in table
+                                    let barColor = '';
+                                    if (typeof v === 'boolean') {
+                                      barColor = v ? 'bg-green-500' : 'bg-red-500';
+                                    } else if (typeof v === 'number') {
+                                      barColor = 'bg-blue-400';
+                                    } else if (typeof v === 'string') {
+                                      barColor = 'bg-gray-400';
+                                    } else {
+                                      barColor = 'bg-border';
+                                    }
                                     return (
                                       <tr key={k} className="align-top border-b">
                                         <td className="py-2 font-medium">{k}</td>
@@ -273,7 +301,7 @@ export default function DocsPage() {
                                         <td className="py-2 text-muted-foreground">{t}</td>
                                         <td className="py-2 w-48">
                                           <div className="w-full bg-border rounded h-3">
-                                            <div style={{ width: `${pct}%` }} className={`h-3 ${typeof v === 'boolean' ? (v ? 'bg-green-500' : 'bg-red-500') : 'bg-primary'} rounded`} />
+                                            <div style={{ width: `${pct}%` }} className={`h-3 ${barColor} rounded`} />
                                           </div>
                                         </td>
                                       </tr>
@@ -289,7 +317,11 @@ export default function DocsPage() {
                   )}
                 </div>
               )}
-              <p>Examples:</p>
+              <div className="mb-4 bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap text-sm">
+                <strong>Redirect flag:</strong><br />
+                <code>window.__builderFlags.redirect = '/games';</code><br />
+                Allows you to set a custom redirect path for when the close button is clicked in the play overlay or mini-player.
+              </div>
               <pre className="bg-muted p-3 rounded overflow-x-auto whitespace-pre-wrap"><code>{`<script src="bundle.js" data-flags="hideDevButton,env=prod,featureX=true"></script>`}</code></pre>
             </DocSection>
 
