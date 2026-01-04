@@ -8,7 +8,7 @@ const gamingSites = [
   {
     name: "gn-math",
     description: "Play unbl*cked games like Crazy Cattle 3D and DriveMad on GN-Math. Fast, free, no downloads—perfect for school or home.",
-    url: "https://gn-math.github.io/",
+    url: "https://discord.gg/gn-math/",
     category: "Gaming",
     icon: <Gamepad2 className="w-6 h-6" />,
   },
